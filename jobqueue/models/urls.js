@@ -14,6 +14,9 @@ function urlWorkers(url, id) {
       reject(error);
     }
 
+    // let's fix some url
+    html = html.replace(/src="\//gi, 'src="' + url + '/');
+
     db.none('update urls set data=$1 where id=$2', [html, id])
       .then((data) => {
         console.log(chalk.bgGreen('✓') + ' URL saved: ', url);
