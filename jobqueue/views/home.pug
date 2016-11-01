@@ -1,0 +1,45 @@
+extends layout
+
+block content
+  .page-header
+    h1 URL Job Queue
+    p.lead Enter a URL to save or an ID to check on the status.
+  .row
+    form(
+      class='col-md-4'
+      action='/url'
+      method='post'
+    )
+      .form-group
+        label(
+          for='url'
+        ) URL
+        input(
+          type='url'
+          class='form-control'
+          name='url'
+          placeholder='http://www.example.com'
+        )
+      button(
+        class='btn btn-primary'
+        type='submit'
+      ) Save URL
+    form(
+      class='col-md-4'
+      action='/url'
+      method='get'
+    )
+      .form-group
+        label(
+          for='id'
+        ) ID
+        input(
+          type='text'
+          class='form-control'
+          name='id'
+          placeholder='enter an ID to lookup'
+        )
+      button(
+        class='btn btn-info'
+        type='submit'
+      ) Search ID
