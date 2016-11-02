@@ -5,26 +5,32 @@ const db = require('../db/db');
 
 Promise.promisifyAll(request);
 
+function insertErrorToDb(id, url) {
+  db.none('update urls set data=$1 where id=$2', ['Error fetching URL.', id]);
+  console.log(chalk.bgRed('X') + ' Error fecthing: ' + url + ' id: ' + id);
+}
+
 /**
  * Get URL and update DB
  */
 function urlWorkers(url, id) {
-  request(url, (error, response, html) => {
-    if (error) { 
-      reject(error);
+  request(url).then((html) => {
+
+    if (html.statusCode === 200) {
+      // Add URL
+      html = html.body.replace(/src="\//gi, 'src="' + url + '/');
+
+      db.none('update urls set data=$1 where id=$2', [html, id])
+        .then((data) => {
+          console.log(chalk.bgGreen('✓') + ' URL saved: ', url);
+        })
+        .catch((err) => {
+          insertErrorToDb(id, url);
+        });
+    } else {
+      insertErrorToDb(id, url);
     }
-
-    // let's fix some url
-    html = html.replace(/src="\//gi, 'src="' + url + '/');
-
-    db.none('update urls set data=$1 where id=$2', [html, id])
-      .then((data) => {
-        console.log(chalk.bgGreen('✓') + ' URL saved: ', url);
-      })
-      .catch((err) => {
-        db.none('update urls set data=$1 where id=$2', ['Error fetching URL.', id]);
-        console.log(chalk.bgRex('X') + ' Error fecthing: ' + url + ' id: ' + id);
-      });
+    
   });
 } 
 
@@ -39,16 +45,10 @@ exports.postURL = (url) => {
       .then(function (data) {
         const id = data.id;
 
-        console.log('id: ', id);
-
         // fire off worker
         urlWorkers(url, id);
 
-        // display fetching...
-        res.render('postedUrl', {
-          id: id,
-          url: url
-        });
+        res.redirect('/url?id=' + id + '&url=' + url);
       })
       .catch(function (error) {
          return next (error);
@@ -59,13 +59,21 @@ exports.postURL = (url) => {
 /**
  * Get URL from given ID
  */
-exports.getURL = (id) => {
+exports.getURL = (id, url) => {
   console.log(chalk.blue('✓') + ' fetching id: ', id);
   
-  return (res) => {
+  return (res, next) => {
     db.one('select * from urls where id=$1', [id])
       .then(resp => {
-        res.status(200).send(resp.data);
+        if (resp.data === 'Fetching URL...') {
+          // display fetching...
+          res.render('postedUrl', {
+            id: id,
+            url: url
+          });
+        } else {
+          res.send(resp.data);
+        }
       })
       .catch((err) => {
         return next (err);

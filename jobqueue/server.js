@@ -45,8 +45,8 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: oneDay * 28 }))
  * Routes
  */
 app.get('/', urlController.index);
-app.get('/url/:id?', urlController.get);
-app.post('/url', urlController.post);
+app.get('/url/:id?/:url?', urlController.get);
+app.post('/', urlController.post);
 
 /**
  * Error Handler

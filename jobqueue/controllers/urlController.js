@@ -14,13 +14,14 @@ exports.index = (req, res) => {
  */
 exports.get = (req, res, next) => {
   let id = req.params.id || req.query.id;
+  let url = req.params.url;
 
   if (!id) {
     res.status(404).send('<h1>Error! No ID given.</h1>');
     res.end();
   }
 
-  urlModel.getURL(id)(res, next);
+  urlModel.getURL(id, url)(res, next);
 };
 
 /**
