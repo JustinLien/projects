@@ -14,7 +14,7 @@ exports.index = (req, res) => {
  */
 exports.get = (req, res, next) => {
   let id = req.params.id || req.query.id;
-  let url = req.params.url;
+  let url = req.params.url || req.query.url;
 
   if (!id) {
     res.status(404).send('<h1>Error! No ID given.</h1>');
