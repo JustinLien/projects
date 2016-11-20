@@ -1,6 +1,6 @@
 # Image Gallery
 
-Display a list of images and implment drag/drop feature.
+Display a list of images and implement drag/drop feature.
 
 Run npm install
 
