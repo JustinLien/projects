@@ -1,0 +1,14 @@
+{
+  "name": "imagegallery",
+  "version": "1.0.0",
+  "description": "Create a webpage that displays a gallery of images, given a JSON array containing a list of image URLs.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
