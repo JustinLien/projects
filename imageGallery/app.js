@@ -2,7 +2,6 @@
  * Module dependencies
  */
 const express = require('express');
-// const bodyParser = require('body-parser');
 const path = require('path');
 
 /**
@@ -21,12 +20,6 @@ app.set('views', path.join(__dirname, 'views'));
  */
 const oneDay = 86400000;
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: oneDay * 28 }));
-
-/**
- * Routes
- */
-// app.get('/', urlController.index);
-
 
 /**
  * Start Express server.
